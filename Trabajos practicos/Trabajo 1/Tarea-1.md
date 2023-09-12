@@ -4,19 +4,19 @@
 
 ## **Matricula:** 21-SISN-2-070
 
-## **Fecha de entrega:** N/A
+## **Fecha de entrega:** 13-09-2023
 
 1. Cree una tabla Markdown que contenga las columnas nombre, fecha y las columnas con los aportes que necesite (minimo 2 de cada uno), las entradas deben ser de Warren McCulloch, Walter Pitts, Donald Hebb, Alan Turing, John McCarthy, Marvin Minsky y Artur Samuel. (3 puntos)
 
-| Nombre           | Fecha       | Aporte 1                          | Aporte 2                          |
-|------------------|-------------|-----------------------------------|-----------------------------------|
-| Warren McCulloch | 1898-1969   | Investigacion en neurociencia     | Desarrollo de las redes neuronales |
-| Walter Pitts     | 1923-1969   | Contribuciones a la logica formal | Teoria de las redes neuronales     |
-| Donald Hebb      | 1904-1985   | Teoria del aprendizaje hebbiano    | Investigacion en psicologia       |
-| Alan Turing      | 1912-1954   | Fundamentos de la computacion      | Descifrado de codigos en la WWII   |
-| John McCarthy    | 1927-2011   | Desarrollo de la inteligencia artificial | Lenguajes de programacion       |
-| Marvin Minsky    | 1927-2016   | Contribuciones a la inteligencia artificial | Robotica                      |
-| Artur Samuel     | 1901-1990   | Aprendizaje automatico             | Juegos de mesa                     |
+| Nombre           | Aporte 1                                  | Fecha Aporte 1 | Aporte 2                                      | Fecha Aporte 2 |
+|------------------|-------------------------------------------|----------------|-----------------------------------------------|----------------|
+| Warren McCulloch | Propuso el modelo de neuronas artificiales | 1943           | Investigó la teoría de la lógica en el cerebro | 1945           |
+| Walter Pitts     | Desarrolló la teoría de las redes neuronales| 1943           | Estableció las bases de la computación neuronal| 1946           |
+| Donald Hebb      | Propuso la regla de aprendizaje de Hebb    | 1949           | Investigó la plasticidad sináptica            | 1950           |
+| Alan Turing      | Formuló el concepto de la máquina de Turing| 1936           | Contribuyó a la criptografía durante la WWII  | 1940           |
+| John McCarthy    | Inventó el lenguaje de programación LISP    | 1956           | Pionero en la inteligencia artificial         | 1958           |
+| Marvin Minsky    | Co-fundó el laboratorio de IA en el MIT     | 1951           | Desarrolló el concepto de redes semánticas     | 1953           |
+| Artur Samuel     | Creó el primer programa de ajedrez          | 1959           | Pionero en el aprendizaje automático           | 1962           |
 
 
 ---
