@@ -1,0 +1,10 @@
+Definicion de Inteligencia Artificial:
+
+La Inteligencia Artificial es un campo que crea programas para que las maquinas hagan cosas inteligentes, como aprender, pensar y tomar decisiones.
+
+Sucesos recientes en la historia de la Inteligencia Artificial:
+
+
+- La IA ha revolucionado la industria automotriz con el desarrollo de vehiculos autonomos, que prometen mejorar la seguridad vial y transformar la forma en que nos desplazamos.
+- En el ambito de la atencion al cliente, los chatbots y asistentes virtuales han mejorado la experiencia del usuario al brindar respuestas rapidas y personalizadas.
+- El desarrollo de robots inteligentes ha transformado la industria manufacturera, permitiendo la automatizacion de tareas repetitivas y peligrosas.
