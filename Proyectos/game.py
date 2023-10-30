@@ -1,133 +1,119 @@
-import pygame, sys, random, time
-from pygame.locals import *
+import pygame
+import sys
 
-# Configuración de Pygame
+# Inicialización de Pygame
 pygame.init()
-mainClock = pygame.time.Clock()
 
 # Configuración de la ventana
-WINDOWWIDTH = 1000
-WINDOWHEIGHT = 1000
-windowSurface = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT), 0, 32)
-pygame.display.set_caption('Final')
+WIDTH, HEIGHT = 640, 480
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Persecución")
 
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-RED = (255, 0, 0)
-BLOCKSIZE = 50
-player = pygame.Rect(500, 500, 30, 30)
-blocks = []
+# Configuración de la fuente para mostrar la puntuación
+font = pygame.font.Font(None, 36)
 
-moveLeft = False
-moveRight = False
-moveUp = False
-moveDown = False
+# Clases para el jugador (ratón) y el agente (gato)
+class Player(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.image.load("raton.png").convert_alpha()
+        self.rect = self.image.get_rect()
+        self.rect.x = WIDTH // 2
+        self.rect.y = HEIGHT // 2
 
-MOVESPEED = 7
+    def update(self):
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT]:
+            self.rect.x -= 5
+        if keys[pygame.K_RIGHT]:
+            self.rect.x += 5
+        if keys[pygame.K_UP]:
+            self.rect.y -= 5
+        if keys[pygame.K_DOWN]:
+            self.rect.y += 5
+        
+        # Limitar al jugador a los bordes de la pantalla
+        if self.rect.x < 0:
+            self.rect.x = 0
+        if self.rect.x > WIDTH - self.rect.width:
+            self.rect.x = WIDTH - self.rect.width
+        if self.rect.y < 0:
+            self.rect.y = 0
+        if self.rect.y > HEIGHT - self.rect.height:
+            self.rect.y = HEIGHT - self.rect.height
 
-DOWNLEFT = 1
-DOWNRIGHT = 3
-UPLEFT = 7
-UPRIGHT = 9
+class Agent(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        super().__init__()
+        self.image = pygame.image.load("gato.png").convert_alpha()
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
 
-b1 = {'rect': pygame.Rect(1, 1, BLOCKSIZE, BLOCKSIZE), 'color': RED, 'dir': UPLEFT}
-b2 = {'rect': pygame.Rect(925, 1, BLOCKSIZE, BLOCKSIZE), 'color': RED, 'dir': UPRIGHT}
-b3 = {'rect': pygame.Rect(760, 760, BLOCKSIZE, BLOCKSIZE), 'color': RED, 'dir': UPLEFT}
-b4 = {'rect': pygame.Rect(1, 925, BLOCKSIZE, BLOCKSIZE), 'color': RED, 'dir': UPRIGHT}
-b5 = {'rect': pygame.Rect(1, 462, BLOCKSIZE, BLOCKSIZE), 'color': RED, 'dir': UPLEFT}
-b6 = {'rect': pygame.Rect(462, 231, BLOCKSIZE, BLOCKSIZE), 'color': RED, 'dir': UPRIGHT}
-b7 = {'rect': pygame.Rect(231, 462, BLOCKSIZE, BLOCKSIZE), 'color': RED, 'dir': UPLEFT}
-b8 = {'rect': pygame.Rect(325, 325, BLOCKSIZE, BLOCKSIZE), 'color': RED, 'dir': UPLEFT}
-b9 = {'rect': pygame.Rect(100, 625, BLOCKSIZE, BLOCKSIZE), 'color': RED, 'dir': UPLEFT}
-b10 = {'rect': pygame.Rect(530, 1, BLOCKSIZE, BLOCKSIZE), 'color': RED, 'dir': UPLEFT}
-blocks = [b1, b2, b3, b4, b5, b6, b7, b8, b9, b10]
+    def update(self, player_rect):
+        if player_rect.x > self.rect.x:
+            self.rect.x += 1
+        elif player_rect.x < self.rect.x:
+            self.rect.x -= 1
+        if player_rect.y > self.rect.y:
+            self.rect.y += 1
+        elif player_rect.y < self.rect.y:
+            self.rect.y -= 1
 
-while True:
+        # Limitar al agente a los bordes de la pantalla
+        if self.rect.x < 0:
+            self.rect.x = 0
+        if self.rect.x > WIDTH - self.rect.width:
+            self.rect.x = WIDTH - self.rect.width
+        if self.rect.y < 0:
+            self.rect.y = 0
+        if self.rect.y > HEIGHT - self.rect.height:
+            self.rect.y = HEIGHT - self.rect.height
+
+# Inicialización de los personajes
+player = Player()
+agent = Agent(100, 100)
+
+# Crear grupos de sprites
+all_sprites = pygame.sprite.Group()
+all_sprites.add(player)
+all_sprites.add(agent)
+
+# Configuración del temporizador para la puntuación
+score = 0
+pygame.time.set_timer(pygame.USEREVENT, 1000)
+
+# Bucle del juego
+running = True
+while running:
+    # Manejar eventos
     for event in pygame.event.get():
-        if event.type == QUIT:
-            pygame.quit()
-            sys.exit()
-        if event.type == KEYDOWN:
-            if event.key == K_LEFT or event.key == ord('a'):
-                moveRight = False
-                moveLeft = True
-            if event.key == K_RIGHT or event.key == ord('d'):
-                moveLeft = False
-                moveRight = True
-            if event.key == K_UP or event.key == ord('w'):
-                moveDown = False
-                moveUp = True
-            if event.key == K_DOWN or event.key == ord('s'):
-                moveUp = False
-                moveDown = True
-        if event.type == KEYUP:
-            if event.key == K_ESCAPE:
-                pygame.quit()
-                sys.exit()
-            if event.key == K_LEFT or event.key == ord('a'):
-                moveLeft = False
-            if event.key == K_RIGHT or event.key == ord('d'):
-                moveRight = False
-            if event.key == K_UP or event.key == ord('w'):
-                moveUp = False
-            if event.key == K_DOWN or event.key == ord('s'):
-                moveDown = False
+        if event.type == pygame.QUIT:
+            running = False
+        elif event.type == pygame.USEREVENT:
+            score += 1
 
-    for b in blocks:
-        if b['dir'] == DOWNLEFT:
-            b['rect'].left -= MOVESPEED
-            b['rect'].top += MOVESPEED
-        if b['dir'] == DOWNRIGHT:
-            b['rect'].left += MOVESPEED
-            b['rect'].top += MOVESPEED
-        if b['dir'] == UPLEFT:
-            b['rect'].left -= MOVESPEED
-            b['rect'].top -= MOVESPEED
-        if b['dir'] == UPRIGHT:
-            b['rect'].left += MOVESPEED
-            b['rect'].top -= MOVESPEED
+    # Actualizar sprites
+    player.update()
+    agent.update(player.rect)
 
-        if b['rect'].top < 0:
-            if b['dir'] == UPLEFT:
-                b['dir'] = DOWNLEFT
-            if b['dir'] == UPRIGHT:
-                b['dir'] = DOWNRIGHT
-        if b['rect'].bottom > WINDOWHEIGHT:
-            if b['dir'] == DOWNLEFT:
-                b['dir'] = UPLEFT
-            if b['dir'] == DOWNRIGHT:
-                b['dir'] = UPRIGHT
-        if b['rect'].left < 0:
-            if b['dir'] == DOWNLEFT:
-                b['dir'] = DOWNRIGHT
-            if b['dir'] == UPLEFT:
-                b['dir'] = UPRIGHT
-        if b['rect'].right > WINDOWWIDTH:
-            if b['dir'] == DOWNRIGHT:
-                b['dir'] = DOWNLEFT
-            if b['dir'] == UPRIGHT:
-                b['dir'] = UPLEFT
+    # Comprobar si el agente (gato) ha atrapado al jugador (ratón)
+    if pygame.sprite.spritecollideany(player, [agent]):
+        print("¡Atrapado! Puntuación final:", score)
+        running = False
 
-    # Dibuja los bloques en la superficie
-    for b in blocks:
-        pygame.draw.rect(windowSurface, b['color'], b['rect'])
+    # Dibujar todo en la pantalla
+    screen.fill((255, 255, 255))
+    all_sprites.draw(screen)
 
-    pygame.display.update()
-    time.sleep(0.02)
+    # Mostrar la puntuación
+    score_text = font.render("Puntuacionn: " + str(score), True, (0, 0, 0))
+    screen.blit(score_text, (10, 10))
 
-    windowSurface.fill(BLACK)
+    pygame.display.flip()
 
-    if moveDown and player.bottom < WINDOWHEIGHT:
-        player.top += MOVESPEED
-    if moveUp and player.top > 0:
-        player.top -= MOVESPEED
-    if moveLeft and player.left > 0:
-        player.left -= MOVESPEED
-    if moveRight and player.right < WINDOWWIDTH:
-        player.right += MOVESPEED
+    # Capar la tasa de frames a 60
+    pygame.time.Clock().tick(60)
 
-    for b in blocks[:]:
-        if player.colliderect(b['rect']):
-            blocks.remove(b)
-
-    pygame.draw.rect(windowSurface, WHITE, player)
+pygame.quit()
+sys.exit()
