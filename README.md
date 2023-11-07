@@ -1,1 +1,2 @@
-# inteligencia-altificial
+# inteligencia altificial
+## **Profesor** Yoel Andeyci Pilier Martínez
